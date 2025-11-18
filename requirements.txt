@@ -19,6 +19,9 @@ httpx==0.25.1
 # Linting and formatting
 ruff==0.1.6
 
+# Password hashing
+werkzeug==3.0.1
+
 # Database drivers
 # For SQLite (default)
 # No additional driver needed
