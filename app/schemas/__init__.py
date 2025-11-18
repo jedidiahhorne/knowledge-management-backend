@@ -16,6 +16,12 @@ from app.schemas.knowledge_item import (
 )
 from app.schemas.attachment import AttachmentResponse
 from app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
+from app.schemas.search import (
+    SearchNotesRequest,
+    SearchNotesResponse,
+    SearchTagsRequest,
+    SearchTagsResponse,
+)
 from app.schemas.tag import TagCreate, TagResponse, TagUpdate
 
 __all__ = [
@@ -26,6 +32,10 @@ __all__ = [
     "NoteCreate",
     "NoteResponse",
     "NoteUpdate",
+    "SearchNotesRequest",
+    "SearchNotesResponse",
+    "SearchTagsRequest",
+    "SearchTagsResponse",
     "TagCreate",
     "TagResponse",
     "TagUpdate",
