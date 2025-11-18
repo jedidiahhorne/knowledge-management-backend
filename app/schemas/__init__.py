@@ -15,6 +15,7 @@ from app.schemas.knowledge_item import (
     KnowledgeItemUpdate,
 )
 from app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
+from app.schemas.tag import TagCreate, TagResponse, TagUpdate
 
 __all__ = [
     "KnowledgeItemCreate",
@@ -23,6 +24,9 @@ __all__ = [
     "NoteCreate",
     "NoteResponse",
     "NoteUpdate",
+    "TagCreate",
+    "TagResponse",
+    "TagUpdate",
     "PasswordChange",
     "PasswordReset",
     "PasswordResetRequest",
