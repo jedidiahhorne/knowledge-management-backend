@@ -18,4 +18,5 @@ ignore = [
 
 [lint.per-file-ignores]
 "__init__.py" = ["F401"]  # Allow unused imports in __init__.py
+"app/api/*.py" = ["B008"]  # FastAPI Depends() in function defaults is standard pattern
 

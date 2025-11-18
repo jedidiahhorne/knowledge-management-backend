@@ -1,5 +1,4 @@
 """Tests for knowledge items API."""
-import pytest
 from fastapi import status
 
 

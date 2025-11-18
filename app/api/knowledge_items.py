@@ -1,5 +1,4 @@
 """Knowledge items API routes."""
-from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -7,8 +6,8 @@ from app.db import get_db
 from app.models.knowledge_item import KnowledgeItem
 from app.schemas.knowledge_item import (
     KnowledgeItemCreate,
-    KnowledgeItemUpdate,
     KnowledgeItemResponse,
+    KnowledgeItemUpdate,
 )
 
 router = APIRouter(prefix="/knowledge-items", tags=["knowledge-items"])
@@ -27,11 +26,11 @@ def create_knowledge_item(
     return db_item
 
 
-@router.get("/", response_model=List[KnowledgeItemResponse])
+@router.get("/", response_model=list[KnowledgeItemResponse])
 def list_knowledge_items(
     skip: int = 0,
     limit: int = 100,
-    category: str = None,
+    category: str | None = None,
     db: Session = Depends(get_db),
 ):
     """List all knowledge items with optional filtering."""
