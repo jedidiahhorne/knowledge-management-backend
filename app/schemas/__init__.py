@@ -14,11 +14,15 @@ from app.schemas.knowledge_item import (
     KnowledgeItemResponse,
     KnowledgeItemUpdate,
 )
+from app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 
 __all__ = [
     "KnowledgeItemCreate",
     "KnowledgeItemResponse",
     "KnowledgeItemUpdate",
+    "NoteCreate",
+    "NoteResponse",
+    "NoteUpdate",
     "PasswordChange",
     "PasswordReset",
     "PasswordResetRequest",
