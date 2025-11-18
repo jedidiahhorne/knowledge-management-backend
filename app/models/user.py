@@ -2,8 +2,8 @@
 from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from werkzeug.security import check_password_hash, generate_password_hash
 
+from app.core.security import get_password_hash, verify_password
 from app.db.base import Base
 
 
@@ -32,11 +32,11 @@ class User(Base):
 
     def set_password(self, password: str) -> None:
         """Set password hash for the user."""
-        self.hashed_password = generate_password_hash(password)
+        self.hashed_password = get_password_hash(password)
 
     def check_password(self, password: str) -> bool:
         """Check if provided password matches the user's password hash."""
-        return check_password_hash(self.hashed_password, password)
+        return verify_password(password, self.hashed_password)
 
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"

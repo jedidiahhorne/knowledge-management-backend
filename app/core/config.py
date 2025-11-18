@@ -23,6 +23,15 @@ class Settings(BaseSettings):
     # CORS
     CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8000"]
 
+    # JWT Authentication
+    SECRET_KEY: str = "your-secret-key-change-this-in-production-use-env-variable"
+    ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+
+    # Password Reset
+    PASSWORD_RESET_TOKEN_EXPIRE_HOURS: int = 1
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

@@ -1,4 +1,14 @@
 """Pydantic schemas for request/response validation."""
+from app.schemas.auth import (
+    PasswordChange,
+    PasswordReset,
+    PasswordResetRequest,
+    Token,
+    TokenRefresh,
+    UserLogin,
+    UserRegister,
+    UserResponse,
+)
 from app.schemas.knowledge_item import (
     KnowledgeItemCreate,
     KnowledgeItemResponse,
@@ -7,7 +17,14 @@ from app.schemas.knowledge_item import (
 
 __all__ = [
     "KnowledgeItemCreate",
-    "KnowledgeItemUpdate",
     "KnowledgeItemResponse",
+    "KnowledgeItemUpdate",
+    "PasswordChange",
+    "PasswordReset",
+    "PasswordResetRequest",
+    "Token",
+    "TokenRefresh",
+    "UserLogin",
+    "UserRegister",
+    "UserResponse",
 ]
-
