@@ -1,9 +1,7 @@
 """Tests for attachments API endpoints."""
 import io
-from pathlib import Path
 
 from fastapi import status
-from fastapi.testclient import TestClient
 
 
 def test_upload_attachment(client, db_session):
@@ -255,7 +253,6 @@ def test_download_attachment(client, db_session, tmp_path):
     from app.models.user import User
 
     # Set upload directory to temp path for testing
-    import app.core.storage as storage_module
     original_upload_dir = settings.UPLOAD_DIR
     settings.UPLOAD_DIR = str(tmp_path / "uploads")
 
