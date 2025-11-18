@@ -32,6 +32,20 @@ class Settings(BaseSettings):
     # Password Reset
     PASSWORD_RESET_TOKEN_EXPIRE_HOURS: int = 1
 
+    # File Upload
+    UPLOAD_DIR: str = "./uploads"
+    MAX_FILE_SIZE: int = 10 * 1024 * 1024  # 10 MB in bytes
+    ALLOWED_EXTENSIONS: set[str] = {
+        # Images
+        "jpg", "jpeg", "png", "gif", "webp", "svg",
+        # Documents
+        "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
+        # Text
+        "txt", "md", "csv",
+        # Archives
+        "zip", "rar", "7z",
+    }
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

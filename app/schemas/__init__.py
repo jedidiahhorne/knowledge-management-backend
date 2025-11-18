@@ -14,10 +14,12 @@ from app.schemas.knowledge_item import (
     KnowledgeItemResponse,
     KnowledgeItemUpdate,
 )
+from app.schemas.attachment import AttachmentResponse
 from app.schemas.note import NoteCreate, NoteResponse, NoteUpdate
 from app.schemas.tag import TagCreate, TagResponse, TagUpdate
 
 __all__ = [
+    "AttachmentResponse",
     "KnowledgeItemCreate",
     "KnowledgeItemResponse",
     "KnowledgeItemUpdate",

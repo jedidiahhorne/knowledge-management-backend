@@ -43,6 +43,9 @@ ENV/
 *.sqlite
 *.sqlite3
 
+# Uploads
+uploads/
+
 # Testing
 .pytest_cache/
 .coverage
