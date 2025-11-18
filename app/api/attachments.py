@@ -41,7 +41,7 @@ def upload_attachment(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e),
-        )
+        ) from e
 
     # Get MIME type
     mime_type = get_mime_type(file.filename or "")
@@ -169,7 +169,7 @@ def delete_attachment(
     # Delete file from storage
     try:
         delete_file(attachment.file_path)
-    except Exception as err:
+    except Exception:
         # Log error but continue with database deletion
         # In production, you might want to log this error
         pass
