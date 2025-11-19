@@ -244,11 +244,46 @@ MAX_FILE_SIZE=10485760
 
 ## Database Migrations
 
-Your application automatically creates tables on startup via `init_db()` in `app/main.py`. For production, consider:
+**✅ Migrations are automatically run on deployment!**
 
-1. Using Alembic for proper migrations
-2. Running migrations manually before deployment
-3. Using Railway's one-off commands to run migrations
+The application uses Alembic for database migrations. When the container starts:
+
+1. **Migrations run automatically** via `scripts/start.sh` before the app starts
+2. This ensures all database tables are created/updated on every deployment
+3. No manual intervention needed - migrations happen automatically
+
+### How It Works
+
+- The Dockerfile runs `scripts/start.sh` on container startup
+- The startup script runs `alembic upgrade head` to apply all pending migrations
+- Then it starts the FastAPI application
+
+### Manual Migration Commands (if needed)
+
+If you need to run migrations manually:
+
+```bash
+# Connect to Railway service shell
+railway shell
+
+# Or using Railway CLI
+railway run alembic upgrade head
+
+# Create a new migration (after model changes)
+railway run alembic revision --autogenerate -m "Description of changes"
+```
+
+### Creating New Migrations
+
+When you modify database models:
+
+1. Make your model changes
+2. Create a new migration:
+   ```bash
+   alembic revision --autogenerate -m "Description of changes"
+   ```
+3. Review the generated migration file
+4. Commit and push - Railway will automatically run it on deployment
 
 ## File Storage Considerations
 

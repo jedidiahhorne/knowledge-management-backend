@@ -6,8 +6,10 @@ from app.api.router import api_router
 from app.core.config import settings
 from app.db import init_db
 
-# Initialize database
-init_db()
+# Initialize database (for development/SQLite)
+# In production, migrations are run via Alembic before app startup
+if settings.ENVIRONMENT == "development" and "sqlite" in settings.DATABASE_URL.lower():
+    init_db()
 
 # Create FastAPI app
 app = FastAPI(
