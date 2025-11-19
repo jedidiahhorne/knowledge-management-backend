@@ -1,10 +1,18 @@
 """Attachments API routes."""
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.dependencies import get_current_active_user
-from app.core.storage import delete_file, get_file_path, get_mime_type, save_uploaded_file
+from app.core.storage import (
+    delete_file,
+    get_file_content,
+    get_file_path,
+    get_mime_type,
+    get_s3_url,
+    save_uploaded_file,
+)
 from app.db import get_db
 from app.models.attachment import Attachment
 from app.models.note import Note
@@ -128,20 +136,37 @@ def download_attachment(
             detail="Attachment not found",
         )
 
-    # Get file path
-    file_path = get_file_path(attachment.file_path)
-    if not file_path.exists():
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="File not found on disk",
-        )
+    # Handle S3 storage - return presigned URL
+    if settings.USE_S3_STORAGE:
+        try:
+            presigned_url = get_s3_url(attachment.file_path, expires_in=3600)  # 1 hour expiry
+            return RedirectResponse(url=presigned_url, status_code=status.HTTP_302_FOUND)
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to generate download URL: {str(e)}",
+            ) from e
 
-    # Return file with appropriate headers
-    return FileResponse(
-        path=str(file_path),
-        filename=attachment.filename,
-        media_type=attachment.mime_type or "application/octet-stream",
-    )
+    # Handle local storage - serve file directly
+    try:
+        file_path = get_file_path(attachment.file_path)
+        if not file_path.exists():
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="File not found on disk",
+            )
+
+        return FileResponse(
+            path=str(file_path),
+            filename=attachment.filename,
+            media_type=attachment.mime_type or "application/octet-stream",
+        )
+    except ValueError:
+        # get_file_path raises ValueError for S3, but we already handled that above
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Storage configuration error",
+        )
 
 
 @router.delete("/{attachment_id}", status_code=status.HTTP_204_NO_CONTENT)

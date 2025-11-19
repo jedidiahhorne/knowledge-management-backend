@@ -32,7 +32,17 @@ class Settings(BaseSettings):
     # Password Reset
     PASSWORD_RESET_TOKEN_EXPIRE_HOURS: int = 1
 
-    # File Upload
+    # File Upload - S3/MinIO Storage
+    USE_S3_STORAGE: bool = False  # Set to True to use S3/MinIO instead of local storage
+    S3_ENDPOINT_URL: str | None = None  # MinIO endpoint (e.g., https://minio.example.com)
+    S3_ACCESS_KEY_ID: str | None = None
+    S3_SECRET_ACCESS_KEY: str | None = None
+    S3_BUCKET_NAME: str = "knowledge-management-uploads"
+    S3_REGION: str = "us-east-1"  # Not used for MinIO but required by boto3
+    S3_USE_SSL: bool = True
+    S3_VERIFY_SSL: bool = True  # Set to False for self-signed certificates (common with MinIO)
+
+    # File Upload - Local Storage (fallback)
     UPLOAD_DIR: str = "./uploads"
     MAX_FILE_SIZE: int = 10 * 1024 * 1024  # 10 MB in bytes
     ALLOWED_EXTENSIONS: set[str] = {

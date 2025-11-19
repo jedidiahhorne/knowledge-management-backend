@@ -226,9 +226,79 @@ API_V1_PREFIX=/api/v1
 PROJECT_NAME=Knowledge Management API
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 REFRESH_TOKEN_EXPIRE_DAYS=7
-UPLOAD_DIR=./uploads
 MAX_FILE_SIZE=10485760
+
+# S3/MinIO Storage (for file uploads)
+USE_S3_STORAGE=true
+S3_ENDPOINT_URL=<your-minio-endpoint-url>
+S3_ACCESS_KEY_ID=<your-minio-access-key>
+S3_SECRET_ACCESS_KEY=<your-minio-secret-key>
+S3_BUCKET_NAME=knowledge-management-uploads
+S3_REGION=us-east-1
+S3_USE_SSL=true
+S3_VERIFY_SSL=true
 ```
+
+## S3/MinIO Storage Configuration
+
+The application supports S3-compatible storage (including MinIO) for file uploads. This is recommended for production deployments.
+
+### Setting Up MinIO on Railway
+
+1. **Add MinIO Service:**
+   - In your Railway project, click **"New"** → **"Database"** → **"Add MinIO"**
+   - Railway will provision a MinIO instance
+
+2. **Get MinIO Credentials:**
+   - Click on your MinIO service
+   - Go to **"Variables"** tab
+   - Copy the following values:
+     - `MINIO_ENDPOINT` → Use for `S3_ENDPOINT_URL`
+     - `MINIO_ACCESS_KEY` → Use for `S3_ACCESS_KEY_ID`
+     - `MINIO_SECRET_KEY` → Use for `S3_SECRET_ACCESS_KEY`
+     - `MINIO_BUCKET` → Use for `S3_BUCKET_NAME` (or create your own)
+
+3. **Configure Backend Service:**
+   - Go to your backend service → **"Variables"** tab
+   - Add these environment variables:
+
+| Variable | Value | Description |
+|----------|-------|-------------|
+| `USE_S3_STORAGE` | `true` | Enable S3/MinIO storage |
+| `S3_ENDPOINT_URL` | `<from-minio-service>` | MinIO endpoint URL |
+| `S3_ACCESS_KEY_ID` | `<from-minio-service>` | MinIO access key |
+| `S3_SECRET_ACCESS_KEY` | `<from-minio-service>` | MinIO secret key |
+| `S3_BUCKET_NAME` | `knowledge-management-uploads` | Bucket name (will be created if doesn't exist) |
+| `S3_REGION` | `us-east-1` | Region (not used by MinIO but required) |
+| `S3_USE_SSL` | `true` | Use SSL for connections |
+| `S3_VERIFY_SSL` | `true` | Verify SSL certificates (set to `false` for self-signed) |
+
+### MinIO Endpoint URL Format
+
+Railway MinIO endpoints typically look like:
+- `https://minio-production.up.railway.app`
+- Or check your MinIO service's **"Networking"** tab for the public URL
+
+### Creating the Bucket
+
+The application will automatically create the bucket if it doesn't exist. However, you can also create it manually:
+
+1. Access MinIO web interface (Railway provides a URL)
+2. Login with your access key and secret key
+3. Create a bucket with the name specified in `S3_BUCKET_NAME`
+
+### Local Storage (Development)
+
+For local development, you can use local storage by:
+- Setting `USE_S3_STORAGE=false` (or omitting it)
+- Files will be stored in `./uploads` directory
+
+### File Download
+
+When using S3 storage:
+- Download endpoints return presigned URLs (valid for 1 hour)
+- Files are served directly from MinIO/S3
+- No files are stored in the application container
 
 ## Updating Your Deployment
 
