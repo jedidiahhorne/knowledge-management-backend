@@ -1,0 +1,29 @@
+# Production requirements (includes PostgreSQL support)
+# Copy this to requirements.txt for production deployments with PostgreSQL
+
+# FastAPI and server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Database
+sqlalchemy==2.0.23
+alembic==1.12.1
+psycopg2-binary==2.9.9  # PostgreSQL driver
+
+# Environment configuration
+pydantic==2.5.0
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+email-validator==2.1.0
+
+# Password hashing
+werkzeug==3.0.1
+passlib[bcrypt]==1.7.4
+bcrypt==4.1.2
+
+# JWT authentication
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.6
+
+# Note: Testing and linting dependencies removed for production
+

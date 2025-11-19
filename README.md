@@ -299,6 +299,36 @@ alembic upgrade head
 5. Push to the branch
 6. Create a pull request
 
+## Docker Deployment
+
+This application is containerized and ready for deployment. See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
+
+### Quick Start with Docker
+
+```bash
+# Build the image
+docker build -t knowledge-management-api .
+
+# Run with docker-compose
+docker-compose up -d
+
+# Or run directly
+docker run -d \
+  -p 8000:8000 \
+  -e SECRET_KEY=your-secret-key \
+  -v $(pwd)/uploads:/app/uploads \
+  knowledge-management-api
+```
+
+### Recommended Hosting Platforms
+
+1. **Railway** - Easiest setup, $5 credit/month, automatic deployments
+2. **Render** - Free tier available, simple configuration
+3. **Fly.io** - Generous free tier, global edge deployment
+4. **DigitalOcean App Platform** - $5/month, reliable and simple
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions on deploying to each platform.
+
 ## License
 
 This project is open source and available under the MIT License.
