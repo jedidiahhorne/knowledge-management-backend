@@ -26,6 +26,7 @@ services:
       start_period: 10s
 
   # Optional: PostgreSQL database for production-like setup
+  # Uncomment to use PostgreSQL locally instead of SQLite
   # postgres:
   #   image: postgres:15-alpine
   #   container_name: knowledge-management-db
@@ -38,7 +39,18 @@ services:
   #   volumes:
   #     - postgres_data:/var/lib/postgresql/data
   #   restart: unless-stopped
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U knowledge_user"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
 # volumes:
 #   postgres_data:
+
+# To use PostgreSQL with docker-compose:
+# 1. Uncomment the postgres service above
+# 2. Update the api service environment:
+#    - DATABASE_URL=postgresql://knowledge_user:knowledge_password@postgres:5432/knowledge_management
+# 3. Add depends_on: [postgres] to the api service
 

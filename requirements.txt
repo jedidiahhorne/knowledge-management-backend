@@ -34,7 +34,7 @@ python-multipart==0.0.6
 # No additional driver needed
 
 # For PostgreSQL (production)
-# psycopg2-binary==2.9.9
+psycopg2-binary==2.9.9
 
 # For MySQL (alternative)
 # pymysql==1.1.0

@@ -4,11 +4,16 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 
 from app.core.config import settings
 
+# Handle Railway's postgresql:// URL format (SQLAlchemy supports both postgresql:// and postgres://)
+database_url = settings.DATABASE_URL
+# Railway provides postgresql:// URLs which SQLAlchemy handles natively
+
 # Create database engine
 engine = create_engine(
-    settings.DATABASE_URL,
-    connect_args={"check_same_thread": False} if "sqlite" in settings.DATABASE_URL else {},
+    database_url,
+    connect_args={"check_same_thread": False} if "sqlite" in database_url else {},
     echo=settings.DEBUG,
+    pool_pre_ping=True,  # Verify connections before using (important for Railway)
 )
 
 # Create session factory
