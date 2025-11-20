@@ -35,9 +35,14 @@ class Settings(BaseSettings):
     # File Upload - S3/MinIO Storage
     USE_S3_STORAGE: bool = False  # Set to True to use S3/MinIO instead of local storage
     S3_ENDPOINT_URL: str | None = None  # MinIO endpoint (e.g., https://minio.example.com)
-    S3_ACCESS_KEY_ID: str | None = None
-    S3_SECRET_ACCESS_KEY: str | None = None
-    S3_BUCKET_NAME: str = "knowledge-management-uploads"
+    # Railway MinIO uses ROOT_USER and ROOT_PASSWORD (these map to S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY)
+    # For AWS S3, use S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY directly
+    S3_ACCESS_KEY_ID: str | None = None  # MinIO root user (or ROOT_USER from Railway) or AWS access key
+    S3_SECRET_ACCESS_KEY: str | None = None  # MinIO root password (or ROOT_PASSWORD from Railway) or AWS secret key
+    # Alternative Railway MinIO variable names (will be used if S3_ACCESS_KEY_ID/SECRET not set)
+    ROOT_USER: str | None = None  # Railway MinIO root user
+    ROOT_PASSWORD: str | None = None  # Railway MinIO root password
+    S3_BUCKET_NAME: str = "files"  # Default bucket name
     S3_REGION: str = "us-east-1"  # Not used for MinIO but required by boto3
     S3_USE_SSL: bool = True
     S3_VERIFY_SSL: bool = True  # Set to False for self-signed certificates (common with MinIO)

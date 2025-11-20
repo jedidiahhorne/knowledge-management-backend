@@ -40,8 +40,15 @@ def get_s3_client():
     if not settings.S3_ENDPOINT_URL:
         raise ValueError("S3_ENDPOINT_URL must be set when USE_S3_STORAGE=True")
 
-    if not settings.S3_ACCESS_KEY_ID or not settings.S3_SECRET_ACCESS_KEY:
-        raise ValueError("S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY must be set")
+    # Support Railway MinIO's ROOT_USER/ROOT_PASSWORD or standard S3_ACCESS_KEY_ID/SECRET
+    access_key = settings.S3_ACCESS_KEY_ID or settings.ROOT_USER
+    secret_key = settings.S3_SECRET_ACCESS_KEY or settings.ROOT_PASSWORD
+
+    if not access_key or not secret_key:
+        raise ValueError(
+            "S3 credentials must be set. Use either S3_ACCESS_KEY_ID/S3_SECRET_ACCESS_KEY "
+            "or ROOT_USER/ROOT_PASSWORD (for Railway MinIO)"
+        )
 
     # Configure boto3 for MinIO (S3-compatible)
     s3_config = Config(
@@ -49,11 +56,15 @@ def get_s3_client():
         s3={"addressing_style": "path"},
     )
 
+    # Support Railway MinIO's ROOT_USER/ROOT_PASSWORD or standard S3_ACCESS_KEY_ID/SECRET
+    access_key = settings.S3_ACCESS_KEY_ID or settings.ROOT_USER
+    secret_key = settings.S3_SECRET_ACCESS_KEY or settings.ROOT_PASSWORD
+
     client = boto3.client(
         "s3",
         endpoint_url=settings.S3_ENDPOINT_URL,
-        aws_access_key_id=settings.S3_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.S3_SECRET_ACCESS_KEY,
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
         region_name=settings.S3_REGION,
         use_ssl=settings.S3_USE_SSL,
         verify=settings.S3_VERIFY_SSL,

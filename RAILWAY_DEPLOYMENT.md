@@ -231,9 +231,11 @@ MAX_FILE_SIZE=10485760
 # S3/MinIO Storage (for file uploads)
 USE_S3_STORAGE=true
 S3_ENDPOINT_URL=<your-minio-endpoint-url>
-S3_ACCESS_KEY_ID=<your-minio-access-key>
-S3_SECRET_ACCESS_KEY=<your-minio-secret-key>
-S3_BUCKET_NAME=knowledge-management-uploads
+# Railway MinIO uses ROOT_USER and ROOT_PASSWORD
+ROOT_USER=<from-minio-service-variables>
+ROOT_PASSWORD=<from-minio-service-variables>
+# Alternative: Use S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY for AWS S3
+S3_BUCKET_NAME=files
 S3_REGION=us-east-1
 S3_USE_SSL=true
 S3_VERIFY_SSL=true
@@ -252,11 +254,10 @@ The application supports S3-compatible storage (including MinIO) for file upload
 2. **Get MinIO Credentials:**
    - Click on your MinIO service
    - Go to **"Variables"** tab
-   - Copy the following values:
-     - `MINIO_ENDPOINT` → Use for `S3_ENDPOINT_URL`
-     - `MINIO_ACCESS_KEY` → Use for `S3_ACCESS_KEY_ID`
-     - `MINIO_SECRET_KEY` → Use for `S3_SECRET_ACCESS_KEY`
-     - `MINIO_BUCKET` → Use for `S3_BUCKET_NAME` (or create your own)
+   - Railway MinIO provides these variables:
+     - `ROOT_USER` → MinIO root username
+     - `ROOT_PASSWORD` → MinIO root password
+     - Check **"Networking"** tab for the public endpoint URL
 
 3. **Configure Backend Service:**
    - Go to your backend service → **"Variables"** tab
@@ -265,13 +266,15 @@ The application supports S3-compatible storage (including MinIO) for file upload
 | Variable | Value | Description |
 |----------|-------|-------------|
 | `USE_S3_STORAGE` | `true` | Enable S3/MinIO storage |
-| `S3_ENDPOINT_URL` | `<from-minio-service>` | MinIO endpoint URL |
-| `S3_ACCESS_KEY_ID` | `<from-minio-service>` | MinIO access key |
-| `S3_SECRET_ACCESS_KEY` | `<from-minio-service>` | MinIO secret key |
-| `S3_BUCKET_NAME` | `knowledge-management-uploads` | Bucket name (will be created if doesn't exist) |
+| `S3_ENDPOINT_URL` | `<from-minio-networking>` | MinIO endpoint URL from Networking tab |
+| `ROOT_USER` | `<from-minio-service>` | MinIO root user (from MinIO service variables) |
+| `ROOT_PASSWORD` | `<from-minio-service>` | MinIO root password (from MinIO service variables) |
+| `S3_BUCKET_NAME` | `files` | Bucket name (use the bucket you created, default is "files") |
 | `S3_REGION` | `us-east-1` | Region (not used by MinIO but required) |
 | `S3_USE_SSL` | `true` | Use SSL for connections |
 | `S3_VERIFY_SSL` | `true` | Verify SSL certificates (set to `false` for self-signed) |
+
+**Note:** The application supports both Railway's `ROOT_USER`/`ROOT_PASSWORD` naming and standard `S3_ACCESS_KEY_ID`/`S3_SECRET_ACCESS_KEY`. Railway MinIO variables will be used automatically if `S3_ACCESS_KEY_ID` is not set.
 
 ### MinIO Endpoint URL Format
 
@@ -281,11 +284,16 @@ Railway MinIO endpoints typically look like:
 
 ### Creating the Bucket
 
-The application will automatically create the bucket if it doesn't exist. However, you can also create it manually:
+You can create the bucket manually in Railway's MinIO service, or the application will automatically create it if it doesn't exist:
 
-1. Access MinIO web interface (Railway provides a URL)
-2. Login with your access key and secret key
-3. Create a bucket with the name specified in `S3_BUCKET_NAME`
+**Manual Creation:**
+1. In Railway, go to your MinIO service
+2. Click on the service to access the MinIO web interface
+3. Login with `ROOT_USER` and `ROOT_PASSWORD` from the service variables
+4. Create a bucket named `files` (or whatever you set in `S3_BUCKET_NAME`)
+
+**Automatic Creation:**
+- The application will automatically create the bucket on first use if it doesn't exist
 
 ### Local Storage (Development)
 
