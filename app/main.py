@@ -1,6 +1,7 @@
 """FastAPI application main entry point."""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 
 from app.api.router import api_router
 from app.core.config import settings
@@ -17,6 +18,39 @@ app = FastAPI(
     version="1.0.0",
     debug=settings.DEBUG,
 )
+
+
+def custom_openapi():
+    """Custom OpenAPI schema with bearer token security."""
+    if app.openapi_schema:
+        return app.openapi_schema
+
+    openapi_schema = get_openapi(
+        title=settings.PROJECT_NAME,
+        version="1.0.0",
+        description="Knowledge Management API with JWT Bearer Token Authentication",
+        routes=app.routes,
+    )
+
+    # Ensure components exist
+    if "components" not in openapi_schema:
+        openapi_schema["components"] = {}
+
+    # Add security scheme for bearer tokens
+    openapi_schema["components"]["securitySchemes"] = {
+        "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+            "description": "Enter JWT token obtained from /auth/login endpoint",
+        }
+    }
+
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
 
 # Configure CORS
 app.add_middleware(

@@ -8,7 +8,10 @@ from app.core.security import verify_token
 from app.db import get_db
 from app.models.user import User
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_PREFIX}/auth/login/json")
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl=f"{settings.API_V1_PREFIX}/auth/login",
+    scheme_name="Bearer",
+)
 
 
 def get_current_user(
