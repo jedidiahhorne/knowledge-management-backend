@@ -2,6 +2,25 @@
 
 ## File Not Found in MinIO Interface
 
+### Step 0: Access MinIO Web Interface
+
+**Important:** You need to access the MinIO web interface to view files.
+
+1. **In Railway:**
+   - Go to your Railway project
+   - Click on your **MinIO service**
+   - Look for a **"Web Interface"** link or button
+   - Click it to open the MinIO web interface in a new tab/window
+
+2. **Login to MinIO:**
+   - Use the `ROOT_USER` and `ROOT_PASSWORD` from your MinIO service variables
+   - These are the same credentials you set as `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD` in your backend service
+
+3. **Navigate to Your Bucket:**
+   - Once logged in, you'll see a list of buckets
+   - Click on your bucket (default is `files`)
+   - Files are organized in folders by note ID
+
 ### Step 1: Verify File Was Actually Uploaded
 
 1. **Check API Response:**
@@ -42,10 +61,13 @@ Example:
 - File: `document.pdf`
 - Stored as: `123/abc123def456.pdf`
 
-**In MinIO interface:**
-- Look in the `files` bucket (or your configured bucket name)
-- Files are organized by note ID (folders)
-- Each file has a unique name
+**In MinIO web interface:**
+1. **Click the link to open MinIO web interface** (from MinIO service in Railway)
+2. Login with `ROOT_USER` and `ROOT_PASSWORD`
+3. Click on your bucket (default is `files`)
+4. You'll see folders named by note ID (e.g., `123`, `456`)
+5. Click on a note ID folder to see the files inside
+6. Each file has a unique name (e.g., `abc123def456.pdf`)
 
 ### Step 4: Verify MinIO Connection
 
@@ -175,13 +197,15 @@ The `file_path` column shows the S3 key (MinIO object key).
 
 1. **Get File Path from API:**
    - Call `GET /api/v1/attachments/{attachment_id}`
-   - Note the `file_path` value
+   - Note the `file_path` value (e.g., `123/abc123def456.pdf`)
 
 2. **Search in MinIO:**
-   - Open MinIO web interface
-   - Go to your bucket (`files` by default)
-   - Look for a folder matching the note ID
-   - Inside that folder, look for the file
+   - **Click the MinIO web interface link** from your MinIO service in Railway
+   - Login with `ROOT_USER` and `ROOT_PASSWORD`
+   - Click on your bucket (`files` by default)
+   - Look for a folder matching the note ID (first part of `file_path`)
+   - Click on that folder
+   - Look for the file inside (second part of `file_path`)
 
 ### Quick Diagnostic Script
 

@@ -291,7 +291,7 @@ You can create the bucket manually in Railway's MinIO service, or the applicatio
 
 **Manual Creation:**
 1. In Railway, go to your MinIO service
-2. Click on the service to access the MinIO web interface
+2. **Click the link/button to open the MinIO web interface** (usually labeled "Web Interface" or similar)
 3. Login with `ROOT_USER` and `ROOT_PASSWORD` from the service variables
 4. Create a bucket named `files` (or whatever you set in `S3_BUCKET_NAME`)
 
