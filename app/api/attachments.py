@@ -10,7 +10,6 @@ from app.core.storage import (
     get_file_content,
     get_file_path,
     get_mime_type,
-    get_s3_url,
     save_uploaded_file,
 )
 from app.db import get_db
