@@ -1,6 +1,6 @@
 """Attachments API routes."""
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, status
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, Response
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -136,15 +136,21 @@ def download_attachment(
             detail="Attachment not found",
         )
 
-    # Handle S3 storage - return presigned URL
+    # Handle S3 storage - return file content directly
     if settings.USE_S3_STORAGE:
         try:
-            presigned_url = get_s3_url(attachment.file_path, expires_in=3600)  # 1 hour expiry
-            return RedirectResponse(url=presigned_url, status_code=status.HTTP_302_FOUND)
+            file_content = get_file_content(attachment.file_path)
+            return Response(
+                content=file_content,
+                media_type=attachment.mime_type or "application/octet-stream",
+                headers={
+                    "Content-Disposition": f'attachment; filename="{attachment.filename}"',
+                },
+            )
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to generate download URL: {str(e)}",
+                detail=f"Failed to download file: {str(e)}",
             ) from e
 
     # Handle local storage - serve file directly
