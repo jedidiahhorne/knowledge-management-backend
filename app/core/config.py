@@ -35,13 +35,13 @@ class Settings(BaseSettings):
     # File Upload - S3/MinIO Storage
     USE_S3_STORAGE: bool = False  # Set to True to use S3/MinIO instead of local storage
     S3_ENDPOINT_URL: str | None = None  # MinIO endpoint (e.g., https://minio.example.com)
-    # Railway MinIO uses ROOT_USER and ROOT_PASSWORD (these map to S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY)
+    # Railway MinIO uses ROOT_USER and ROOT_PASSWORD (map to MINIO_ROOT_USER and MINIO_ROOT_PASSWORD)
     # For AWS S3, use S3_ACCESS_KEY_ID and S3_SECRET_ACCESS_KEY directly
-    S3_ACCESS_KEY_ID: str | None = None  # MinIO root user (or ROOT_USER from Railway) or AWS access key
-    S3_SECRET_ACCESS_KEY: str | None = None  # MinIO root password (or ROOT_PASSWORD from Railway) or AWS secret key
-    # Alternative Railway MinIO variable names (will be used if S3_ACCESS_KEY_ID/SECRET not set)
-    ROOT_USER: str | None = None  # Railway MinIO root user
-    ROOT_PASSWORD: str | None = None  # Railway MinIO root password
+    S3_ACCESS_KEY_ID: str | None = None  # AWS S3 access key (or use MINIO_ROOT_USER for MinIO)
+    S3_SECRET_ACCESS_KEY: str | None = None  # AWS S3 secret key (or use MINIO_ROOT_PASSWORD for MinIO)
+    # MinIO-specific credentials (will be used if S3_ACCESS_KEY_ID/SECRET not set)
+    MINIO_ROOT_USER: str | None = None  # MinIO root user (from Railway ROOT_USER variable)
+    MINIO_ROOT_PASSWORD: str | None = None  # MinIO root password (from Railway ROOT_PASSWORD variable)
     S3_BUCKET_NAME: str = "files"  # Default bucket name
     S3_REGION: str = "us-east-1"  # Not used for MinIO but required by boto3
     S3_USE_SSL: bool = True
