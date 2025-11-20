@@ -32,5 +32,8 @@ echo "Current migration status:"
 alembic current || echo "Could not determine migration status"
 
 echo "Starting application..."
-exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+# Use --proxy-headers to trust X-Forwarded-* headers from Railway's edge proxy
+# Use --forwarded-allow-ips='*' to allow all forwarded headers (Railway handles security)
+# This ensures HTTPS requests aren't downgraded to HTTP
+exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers --forwarded-allow-ips='*'
 
