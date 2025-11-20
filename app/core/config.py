@@ -21,7 +21,16 @@ class Settings(BaseSettings):
     # For MySQL: "mysql+pymysql://user:password@localhost/dbname"
 
     # CORS
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:8000"]
+    # Railway provides CORS_ORIGINS as comma-separated string, we'll parse it
+    CORS_ORIGINS: str | list[str] = "http://localhost:3000,http://localhost:8000"
+    
+    @property
+    def cors_origins_list(self) -> list[str]:
+        """Parse CORS_ORIGINS into a list, handling both string and list formats."""
+        if isinstance(self.CORS_ORIGINS, list):
+            return self.CORS_ORIGINS
+        # Split comma-separated string and strip whitespace
+        return [origin.strip() for origin in self.CORS_ORIGINS.split(",") if origin.strip()]
 
     # JWT Authentication
     SECRET_KEY: str = "your-secret-key-change-this-in-production-use-env-variable"
